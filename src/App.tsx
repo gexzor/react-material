@@ -1,26 +1,49 @@
+import { ThemeProvider } from '@material-ui/core';
 import React from 'react';
-import logo from './logo.svg';
+import {
+	BrowserRouter,
+	Route,
+	RouteComponentProps,
+	Switch,
+} from 'react-router-dom';
 import './App.css';
+import { ContentWrapper, Wrapper } from './App.styles';
+import HeroHeader from './components/HeroHeader/HeroHeader';
+import { routes } from './routes';
+import { theme } from './shared/variables/theme';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<Wrapper>
+			<ThemeProvider theme={theme}>
+				<BrowserRouter>
+					<Switch>
+						{routes.map((route, index) => {
+							return (
+								<Route
+									key={index}
+									path={route.path}
+									exact={route.exact}
+									render={(
+										props: RouteComponentProps<any>
+									) => (
+										<ContentWrapper>
+											<HeroHeader />
+											<route.component
+												name={route.name}
+												{...props}
+												{...route.props}
+											/>
+										</ContentWrapper>
+									)}
+								></Route>
+							);
+						})}
+					</Switch>
+				</BrowserRouter>
+			</ThemeProvider>
+		</Wrapper>
+	);
 }
 
 export default App;
